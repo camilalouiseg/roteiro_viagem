@@ -1,5 +1,5 @@
 import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
+import html2canvas from 'html2canvas-pro';
 
 export interface PdfExportProgress {
   currentPage: number;
@@ -10,6 +10,7 @@ export interface PdfExportProgress {
 
 /**
  * Generates and downloads a multi-page high-resolution PDF file directly in the browser
+ * Uses html2canvas-pro which natively supports Tailwind CSS v4's oklch() color format.
  */
 export async function downloadItineraryPdf(
   containerSelector?: string,
@@ -59,13 +60,14 @@ export async function downloadItineraryPdf(
         status: 'rendering'
       });
 
-      // Render the A4 page container to canvas with 2x resolution
+      // Render the A4 page container to canvas with 2x resolution using html2canvas-pro
       const canvas = await html2canvas(pageEl, {
         scale: 2,
         useCORS: true,
         logging: false,
         backgroundColor: '#ffffff',
-        windowWidth: 1024
+        windowWidth: 1024,
+        ignoreElements: (element) => element.classList?.contains('no-print')
       });
 
       const imgData = canvas.toDataURL('image/jpeg', 0.95);
