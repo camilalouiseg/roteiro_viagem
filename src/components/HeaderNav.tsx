@@ -1,5 +1,5 @@
 import React from 'react';
-import { Printer, BookOpen, Smartphone, Search, Compass, Edit3 } from 'lucide-react';
+import { Download, BookOpen, Smartphone, Search, Compass, Edit3 } from 'lucide-react';
 import { useItinerary } from '../context/ItineraryContext';
 
 interface HeaderNavProps {
@@ -101,11 +101,11 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
         <div className="flex items-center gap-3 shrink-0">
           <button
             onClick={onPrint}
-            className="flex items-center gap-2 px-4 py-2 text-xs font-semibold text-stone-950 bg-amber-400 hover:bg-amber-300 rounded-lg transition-colors shadow-sm whitespace-nowrap cursor-pointer active:scale-95"
+            className="flex items-center gap-2 px-4 py-2 text-xs font-bold text-stone-950 bg-amber-400 hover:bg-amber-300 rounded-lg transition-colors shadow-sm whitespace-nowrap cursor-pointer active:scale-95"
           >
-            <Printer className="w-4 h-4" />
-            <span className="hidden sm:inline">Gerar PDF / Imprimir</span>
-            <span className="sm:hidden">PDF</span>
+            <Download className="w-4 h-4" />
+            <span className="hidden sm:inline">Baixar PDF (.pdf)</span>
+            <span className="sm:hidden">Baixar PDF</span>
           </button>
         </div>
       </div>

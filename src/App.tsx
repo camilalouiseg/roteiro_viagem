@@ -10,15 +10,20 @@ import { PdfPagesView } from './components/PdfPagesView';
 import { InteractiveView } from './components/InteractiveView';
 import { ItineraryEditor } from './components/ItineraryEditor';
 import { PrintInstructionsModal } from './components/PrintInstructionsModal';
-import { Download, Sparkles, Edit3, BookOpen, Smartphone } from 'lucide-react';
+import { Download, Sparkles, Edit3, BookOpen } from 'lucide-react';
 
 function AppContent() {
   const [viewMode, setViewMode] = useState<'pdf' | 'interactive' | 'editor'>('pdf');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isPrintModalOpen, setIsPrintModalOpen] = useState<boolean>(false);
 
-  const handlePrint = () => {
-    window.print();
+  const handleBrowserPrint = () => {
+    try {
+      window.print();
+    } catch (e) {
+      console.warn('Erro ao chamar window.print():', e);
+      alert('Seu navegador bloqueou a janela de impressão direta. Por favor, use a opção "Baixar Arquivo PDF (.pdf)" no botão superior.');
+    }
   };
 
   return (
@@ -44,7 +49,7 @@ function AppContent() {
             </span>
             <span className="text-stone-500">·</span>
             <span className="text-stone-400 font-mono">
-              {viewMode === 'editor' ? 'Salvo no navegador' : 'Espaçamento ampliado & Destaque de atrações ativo'}
+              {viewMode === 'editor' ? 'Salvo no navegador' : 'Espaçamento ampliado & Destaque de atrações'}
             </span>
           </div>
 
@@ -52,7 +57,7 @@ function AppContent() {
             {viewMode === 'editor' ? (
               <button
                 onClick={() => setViewMode('pdf')}
-                className="inline-flex items-center gap-1.5 px-3 py-1 bg-stone-800 hover:bg-stone-700 text-stone-200 font-semibold rounded-md transition-colors border border-stone-700"
+                className="inline-flex items-center gap-1.5 px-3 py-1 bg-stone-800 hover:bg-stone-700 text-stone-200 font-semibold rounded-md transition-colors border border-stone-700 cursor-pointer"
               >
                 <BookOpen className="w-3 h-3 text-amber-400" />
                 <span>Visualizar no PDF</span>
@@ -60,7 +65,7 @@ function AppContent() {
             ) : (
               <button
                 onClick={() => setViewMode('editor')}
-                className="inline-flex items-center gap-1.5 px-3 py-1 bg-stone-800 hover:bg-stone-700 text-stone-200 font-semibold rounded-md transition-colors border border-stone-700"
+                className="inline-flex items-center gap-1.5 px-3 py-1 bg-stone-800 hover:bg-stone-700 text-stone-200 font-semibold rounded-md transition-colors border border-stone-700 cursor-pointer"
               >
                 <Edit3 className="w-3 h-3 text-amber-400" />
                 <span>Editar Textos</span>
@@ -69,10 +74,10 @@ function AppContent() {
 
             <button
               onClick={() => setIsPrintModalOpen(true)}
-              className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-500 hover:bg-amber-400 text-stone-950 font-semibold rounded-md transition-colors shadow-2xs"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold rounded-lg transition-all shadow-2xs cursor-pointer active:scale-95"
             >
-              <Download className="w-3 h-3" />
-              <span>Salvar em PDF</span>
+              <Download className="w-3.5 h-3.5" />
+              <span>Baixar PDF (.pdf)</span>
             </button>
           </div>
         </div>
@@ -80,10 +85,10 @@ function AppContent() {
 
       {/* Main Content Area */}
       <main className="flex-1">
-        {/* On screen, switch between PDF multi-page view, Interactive view, and Editor view */}
+        {/* On screen: switch between PDF multi-page view, Interactive view, and Editor view */}
         <div className="no-print">
           {viewMode === 'pdf' && (
-            <div className="max-w-5xl mx-auto px-4 py-8">
+            <div id="pdf-export-source" className="max-w-5xl mx-auto px-4 py-8">
               <PdfPagesView searchQuery={searchQuery} />
             </div>
           )}
@@ -96,6 +101,25 @@ function AppContent() {
             <ItineraryEditor onPreviewPdf={() => setViewMode('pdf')} />
           )}
         </div>
+
+        {/* Off-screen source for html2canvas export when viewMode !== 'pdf' so download always works! */}
+        {viewMode !== 'pdf' && (
+          <div
+            id="pdf-export-source-offscreen"
+            className="no-print"
+            style={{
+              position: 'fixed',
+              left: '-99999px',
+              top: '0',
+              width: '210mm',
+              pointerEvents: 'none',
+              zIndex: -100
+            }}
+            aria-hidden="true"
+          >
+            <PdfPagesView searchQuery="" />
+          </div>
+        )}
 
         {/* During browser print, ALWAYS render the 17-page PDF document cleanly! */}
         <div className="hidden print:block">
@@ -118,11 +142,11 @@ function AppContent() {
         </div>
       </footer>
 
-      {/* Print Instructions Modal */}
+      {/* Print & Download Modal */}
       <PrintInstructionsModal
         isOpen={isPrintModalOpen}
         onClose={() => setIsPrintModalOpen(false)}
-        onConfirmPrint={handlePrint}
+        onBrowserPrint={handleBrowserPrint}
       />
     </div>
   );
