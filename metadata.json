@@ -1,0 +1,6 @@
+{
+  "name": "Roteiro Europa Central 2026 - Guia & Documento Oficial",
+  "description": "Roteiro personalizado, prático e profissional para 14 dias pela Europa Central (Viena, Praga, Cracóvia, Budapeste e Bratislava).",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

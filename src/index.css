@@ -1,0 +1,73 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    color: #1c1917;
+    background-color: #fafaf9;
+  }
+
+  h1, h2, h3, .font-serif {
+    font-family: 'Playfair Display', Georgia, serif;
+  }
+
+  .font-mono, code, .tabular-nums {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+/* Print Specific Rules for perfect A4 vector PDF output */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 10mm 12mm 10mm 12mm;
+  }
+
+  html, body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    font-size: 11pt;
+    line-height: 1.4;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Hide interactive web elements when printing */
+  .no-print, nav, button.action-btn, .web-only-toolbar {
+    display: none !important;
+  }
+
+  /* Force display of print document */
+  .print-document {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Page break utilities */
+  .page-break-before {
+    page-break-before: always !important;
+    break-before: page !important;
+  }
+
+  .page-break-after {
+    page-break-after: always !important;
+    break-after: page !important;
+  }
+
+  .page-break-inside-avoid {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* Remove screen shadow and fixed widths */
+  .a4-page-container {
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 !important;
+    width: 100% !important;
+    min-height: auto !important;
+    padding: 0 !important;
+  }
+}
